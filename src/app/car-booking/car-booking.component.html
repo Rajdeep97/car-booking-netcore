@@ -1,0 +1,136 @@
+<div class="carConfigurator">
+  <div class="userSelection">
+    <div class="heading">Select your prefered configuration:</div>
+    <form [formGroup]="CarConfiguratorForm">
+      <div class="oneMainItem">
+        <span class="label">Your Name:</span>
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input
+            formControlName="fullName"
+            matInput
+            placeholder="Enter Full Name"
+          />
+          <mat-hint
+            >This field is required • Only A-Z & Max 75 Characters
+            allowed</mat-hint
+          >
+          <mat-error *ngIf="CarConfiguratorForm.get('fullName')?.invalid">
+            <span *ngIf="CarConfiguratorForm.get('fullName')?.errors.pattern"
+              >Only Characters A-Z are allowed!</span
+            >
+            <span *ngIf="CarConfiguratorForm.get('fullName')?.errors.required"
+              >This field is required</span
+            >
+            <span *ngIf="CarConfiguratorForm.get('fullName')?.errors.maxlength"
+              >Name can be of max 75 characters</span
+            >
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="oneMainItem">
+        <span class="label">Select your Car:</span>
+        <div class="carList">
+          <span class="notLoaded" *ngIf="!carList; else carsloaded">
+            <ngx-skeleton-loader
+              count="1"
+              appearance="line"
+            ></ngx-skeleton-loader>
+          </span>
+          <ng-template #carsloaded>
+            <span class="loaded">
+              <p-dropdown
+                clsss="fullWidth"
+                [options]="carList"
+                [formControl]="CarConfiguratorForm.get('car')"
+                optionLabel="brand"
+                [filter]="true"
+                filterBy="brand"
+                [showClear]="true"
+                placeholder="Select a Car"
+              >
+              </p-dropdown>
+            </span>
+          </ng-template>
+        </div>
+      </div>
+      <div class="oneMainItem">
+        <span class="label">Select Auto Parts:</span>
+        <div class="autoParts">
+          <span class="notLoaded" *ngIf="!partsList; else autoPartsloaded">
+            <ngx-skeleton-loader
+              count="1"
+              appearance="line"
+            ></ngx-skeleton-loader>
+          </span>
+          <ng-template #autoPartsloaded>
+            <span class="loaded">
+              <p-multiSelect
+                clsss="fullWidth"
+                [options]="partsList"
+                [formControl]="CarConfiguratorForm.get('carParts')"
+                optionLabel="List of auto parts"
+                [filter]="true"
+                filterBy="List of auto parts"
+                [showClear]="true"
+                placeholder="Select Auto Part(s)s"
+                display="chip"
+                [virtualScroll]="true"
+                itemSize="30"
+              >
+              </p-multiSelect>
+            </span>
+          </ng-template>
+        </div>
+      </div>
+      <div class="oneMainItem">
+        <span class="label">Select Car color</span>
+        <div class="colorSelector">
+          <ngx-colors
+            ngx-colors-trigger
+            style="display: inline-block; margin: 5px"
+            [formControl]="CarConfiguratorForm.get('color')"
+          ></ngx-colors>
+        </div>
+      </div>
+      <div class="acceptButton">
+        <button mat-raised-button color="primary">
+          Submit <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="userSelectionPreview">
+    <div class="title">Summary:</div>
+    <div class="oneItem">
+      <span class="subTitle">Full Name:</span>
+      <span class="answer">{{
+        CarConfiguratorForm.get("fullName")?.value
+      }}</span>
+    </div>
+    <div class="oneItem">
+      <span class="subTitle">Car:</span>
+      <span class="answer">{{
+        CarConfiguratorForm.get("car")?.value.brand
+      }}</span>
+    </div>
+    <div class="oneItem">
+      <span class="subTitle">Car Parts:</span>
+      <span
+        class="answer"
+        *ngFor="let onePart of CarConfiguratorForm.get('carParts')?.value"
+      >
+        {{ getPartValue(onePart) }}</span
+      >
+    </div>
+    <div class="oneItem">
+      <span class="subTitle">Color:</span>
+      <span
+        class="answer"
+        [ngStyle]="{
+          'background-color': CarConfiguratorForm.get('color')?.value
+        }"
+      ></span>
+    </div>
+  </div>
+</div>
